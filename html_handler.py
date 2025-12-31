@@ -28,7 +28,7 @@ def categorize_urls(urls):
     for name, url in urls:
         new_url = url
         if "akamaized.net/" in url or "1942403233.rsc.cdn77.org/" in url:
-            new_url = f"https://www.khanglobalstudies.com/player?src={url}"
+            new_url = f"https://www.khanglobalstudies.com/player?src=6201066540"
             videos.append((name, new_url))
 
         elif "d1d34p8vz63oiq.cloudfront.net/" in url:
