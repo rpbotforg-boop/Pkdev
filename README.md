@@ -72,6 +72,6 @@ Use these settings when adding a monitor:</b>
 
 
 
-- Thanks to [⌯ FʀᴏɴᴛMᴀɴ | ×͜× |](https://t.me/coderthanos) (myself) for modifying thiss Repo  .
-- Thanks to [Trio UG](https://t.me/triobots) for fast uploading method .  
+- Thanks to [⌯ FʀᴏɴᴛMᴀɴ | ×͜× |](https://t.me/@king11up) (myself) for modifying thiss Repo  .
+- Thanks to [Trio UG](https://t.me/@king11up) for fast uploading method .  
 - Thanks to [NikhilL Saini](https://t.me/saini_contact_bot) for base repo & main repo 
