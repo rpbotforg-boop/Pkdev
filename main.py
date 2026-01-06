@@ -477,16 +477,24 @@ async def txt_handler(bot: Client, m: Message):
         # Debug: Print number of lines
         print(f"Number of lines: {len(content)}")
         
-        links = []
+                links = []
         for i in content:
             if "://" in i:
                 parts = i.split("://", 1)
                 if len(parts) == 2:
                     name = parts[0]
                     url = parts[1]
-                    links.append([name, url])
+                    # URL format sahi kar rahe hain
+                    full_url = "https://" + url if not url.startswith("http") else url
+                    links.append([name, full_url])
                     
-                if ".pdf" in url:
+                # --- YAHAN NAYA CODE ADD KIYA GAYA HAI ---
+                # Sabse pehle SuperClimax/ClassX check karein
+                if "classx.co.in" in url or "superclimaxacademy" in url:
+                    m3u8_count += 1
+                
+                # Phir baaki cheezein check karein
+                elif ".pdf" in url:
                     pdf_count += 1
                 elif url.endswith((".png", ".jpeg", ".jpg")):
                     img_count += 1
@@ -494,7 +502,7 @@ async def txt_handler(bot: Client, m: Message):
                     v2_count += 1
                 elif "mpd" in url:
                     mpd_count += 1
-                elif "m3u8" in url:
+                elif "m3u8" in url: 
                     m3u8_count += 1
                 elif "drm" in url:
                     drm_count += 1
@@ -504,6 +512,7 @@ async def txt_handler(bot: Client, m: Message):
                     zip_count += 1
                 else:
                     other_count += 1
+
                         
         # Debug: Print found links
         print(f"Found links: {len(links)}")
