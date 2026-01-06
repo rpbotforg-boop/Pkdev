@@ -51,3 +51,9 @@ itsdangerous
 pytz
 colorama
 reportlab
+# --- Added for ClassX & M3U8 Support ---
+httpx
+httpcore
+h2
+# ---------------------------------------
+
