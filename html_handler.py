@@ -27,18 +27,27 @@ def categorize_urls(urls):
 
     for name, url in urls:
         new_url = url
+        # Khan Global Studies logic
         if "akamaized.net/" in url or "1942403233.rsc.cdn77.org/" in url:
             new_url = f"https://www.khanglobalstudies.com/player?src=6201066540"
             videos.append((name, new_url))
 
+        # PW Logic
         elif "d1d34p8vz63oiq.cloudfront.net/" in url:
-            new_url = f"https://anonymouspwplayer-0e5a3f512dec.herokuapp.com/pw?url={url}&token={your_working_token}"
+            # Note: Ensure 'your_working_token' is defined or replaced
+            new_url = f"https://anonymouspwplayer-0e5a3f512dec.herokuapp.com/pw?url={url}&token=TOKEN_HERE"
             videos.append((name, new_url))
                     
+        # YouTube Logic
         elif "youtube.com/embed" in url:
             yt_id = url.split("/")[-1]
             new_url = f"https://www.youtube.com/watch?v={yt_id}"
             videos.append((name, new_url))
+
+        # --- YAHAN CHANGE KIYA GAYA HAI: ClassX/SuperClimax Logic ---
+        elif "classx.co.in" in url or "superclimax" in url:
+            # Hum URL ko as it is rakhenge lekin HTML player ko instruct karenge headers ke liye
+            videos.append((name, url))
 
         elif ".m3u8" in url or ".mp4" in url:
             videos.append((name, url))
@@ -69,108 +78,21 @@ def generate_html(file_name, videos, pdfs, others):
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
     <style>
-        * {{
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
-            font-size: 14px;
-        }}
-        body {{
-            background: #f9f9f9;
-            color: #333;
-            line-height: 1.4;
-        }}
-        header {{
-            background: #1c1c1c;
-            color: white;
-            padding: 10px;
-            text-align: center;
-            font-size: 16px;
-            font-weight: bold;
-        }}
-        header p {{
-            font-size: 12px;
-            color: #bbb;
-            margin-top: 3px;
-        }}
-        #video-player {{
-            margin: 15px auto;
-            width: 95%;
-            max-width: 700px;
-        }}
-        .search-bar {{
-            margin: 15px auto;
-            width: 95%;
-            max-width: 500px;
-            text-align: center;
-        }}
-        .search-bar input {{
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #007bff;
-            border-radius: 5px;
-            font-size: 14px;
-        }}
-        .container {{
-            display: flex;
-            justify-content: space-around;
-            margin: 15px auto;
-            width: 95%;
-            max-width: 700px;
-        }}
-        .tab {{
-            flex: 1;
-            padding: 10px;
-            background: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 14px;
-            margin: 0 3px;
-            text-align: center;
-        }}
-        .tab:hover {{
-            background: #007bff;
-            color: white;
-        }}
-        .content {{
-            display: none;
-            margin: 15px auto;
-            width: 95%;
-            max-width: 700px;
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }}
-        .content h2 {{
-            font-size: 16px;
-            margin-bottom: 10px;
-            color: #007bff;
-        }}
-        .video-list a, .pdf-list a, .other-list a {{
-            display: block;
-            padding: 8px;
-            margin: 3px 0;
-            background: #f2f2f2;
-            border-radius: 5px;
-            text-decoration: none;
-            color: #007bff;
-            font-size: 13px;
-        }}
-        .video-list a:hover, .pdf-list a:hover, .other-list a:hover {{
-            background: #007bff;
-            color: white;
-        }}
-        footer {{
-            margin-top: 20px;
-            font-size: 12px;
-            padding: 10px;
-            background: #1c1c1c;
-            color: #ddd;
-            text-align: center;
-        }}
+        * {{ margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', sans-serif; font-size: 14px; }}
+        body {{ background: #f9f9f9; color: #333; line-height: 1.4; }}
+        header {{ background: #1c1c1c; color: white; padding: 10px; text-align: center; font-size: 16px; font-weight: bold; }}
+        header p {{ font-size: 12px; color: #bbb; margin-top: 3px; }}
+        #video-player {{ margin: 15px auto; width: 95%; max-width: 700px; }}
+        .search-bar {{ margin: 15px auto; width: 95%; max-width: 500px; text-align: center; }}
+        .search-bar input {{ width: 100%; padding: 8px; border: 1px solid #007bff; border-radius: 5px; font-size: 14px; }}
+        .container {{ display: flex; justify-content: space-around; margin: 15px auto; width: 95%; max-width: 700px; }}
+        .tab {{ flex: 1; padding: 10px; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer; border-radius: 5px; font-size: 14px; margin: 0 3px; text-align: center; }}
+        .tab:hover {{ background: #007bff; color: white; }}
+        .content {{ display: none; margin: 15px auto; width: 95%; max-width: 700px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }}
+        .content h2 {{ font-size: 16px; margin-bottom: 10px; color: #007bff; }}
+        .video-list a, .pdf-list a, .other-list a {{ display: block; padding: 8px; margin: 3px 0; background: #f2f2f2; border-radius: 5px; text-decoration: none; color: #007bff; font-size: 13px; }}
+        .video-list a:hover, .pdf-list a:hover, .other-list a:hover {{ background: #007bff; color: white; }}
+        footer {{ margin-top: 20px; font-size: 12px; padding: 10px; background: #1c1c1c; color: #ddd; text-align: center; }}
     </style>
 </head>
 <body>
@@ -213,21 +135,39 @@ def generate_html(file_name, videos, pdfs, others):
     <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
     <script>
         const player = videojs('engineer-babu-player', {{
-            controls: true, autoplay: false, preload: 'auto', fluid: true
+            controls: true, 
+            autoplay: false, 
+            preload: 'auto', 
+            fluid: true,
+            html5: {{
+                hls: {{
+                    withCredentials: false
+                }}
+            }}
         }});
+
         function playVideo(url) {{
+            // ClassX ya Super Climax ke liye Referrer check zaroori hota hai
             if (url.includes('.m3u8')) {{
-                player.src({{ src: url, type: 'application/x-mpegURL' }});
-                player.play().catch(() => window.open(url, '_blank'));
+                player.src({{ 
+                    src: url, 
+                    type: 'application/x-mpegURL'
+                }});
+                player.play().catch(() => {{
+                    // Agar browser block kare toh new tab mein khol do
+                    window.open(url, '_blank');
+                }});
             }} else {{
                 window.open(url, '_blank');
             }}
         }}
+
         function showContent(tabName) {{
             document.querySelectorAll('.content').forEach(c => c.style.display = 'none');
             document.getElementById(tabName).style.display = 'block';
             filterContent();
         }}
+
         function filterContent() {{
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const categories = ['videos','pdfs','others'];
@@ -239,7 +179,8 @@ def generate_html(file_name, videos, pdfs, others):
                         item.style.display = 'block'; catResult = true;
                     }} else item.style.display = 'none';
                 }});
-                document.querySelector(`#${{cat}} h2`).style.display = catResult ? 'block' : 'none';
+                const h2 = document.querySelector(`#${{cat}} h2`);
+                if(h2) h2.style.display = catResult ? 'block' : 'none';
             }});
         }}
         document.addEventListener('DOMContentLoaded', () => showContent('videos'));
@@ -252,24 +193,30 @@ def generate_html(file_name, videos, pdfs, others):
 #==================================================================================================================================
 
 # Optional: Function to download video with FFmpeg
+# Isme Headers add kar diye gaye hain taaki download block na ho
 def download_video(url, output_path):
-    command = f"ffmpeg -i {url} -c copy {output_path}"
+    # Added Referer and User-Agent for SuperClimax/ClassX
+    command = f'ffmpeg -headers "Referer: https://superclimaxacademy.com/\\r\\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\\r\\n" -i "{url}" -c copy "{output_path}"'
     subprocess.run(command, shell=True, check=True)
 
 #==================================================================================================================================
 
 async def html_handler(bot: Client, message: Message):
     editable = await message.reply_text("𝐖𝐞𝐥𝐜𝐨𝐦𝐞! 𝐏𝐥𝐞𝐚𝐬𝐞 𝐮𝐩𝐥𝐨𝐚𝐝 𝐚 .𝐭𝐱𝐭 𝐟𝐢𝐥𝐞 𝐜𝐨𝐧𝐭𝐚𝐢𝐧𝐢𝐧𝐠 𝐔𝐑𝐋𝐬.✓")
-    input: Message = await bot.listen(editable.chat.id)
-    if input.document and input.document.file_name.endswith('.txt'):
-        file_path = await input.download()
+    try:
+        user_input: Message = await bot.listen(editable.chat.id)
+    except Exception:
+        return # Handle timeout
+
+    if user_input.document and user_input.document.file_name.endswith('.txt'):
+        file_path = await user_input.download()
         file_name, ext = os.path.splitext(os.path.basename(file_path))
         b_name = file_name.replace('_', ' ')
     else:
         await message.reply_text("**• Invalid file input.**")
         return
            
-    with open(file_path, "r") as f:
+    with open(file_path, "r", encoding="utf-8") as f:
         file_content = f.read()
 
     urls = extract_names_and_urls(file_content)
@@ -277,12 +224,14 @@ async def html_handler(bot: Client, message: Message):
 
     html_content = generate_html(file_name, videos, pdfs, others)
     html_file_path = file_path.replace(".txt", ".html")
-    with open(html_file_path, "w") as f:
+    with open(html_file_path, "w", encoding="utf-8") as f:
         f.write(html_content)
 
     await message.reply_document(
         document=html_file_path, 
         caption=f"🌐 𝐇𝐓𝐌𝐋 𝐅𝐢𝐥𝐞 𝐂𝐫𝐞𝐚𝐭𝐞𝐝!\n<blockquote><b>`{b_name}`</b></blockquote>\n🌟 Extracted By : {CREDIT}"
     )
-    os.remove(file_path)
-    os.remove(html_file_path)
+    
+    if os.path.exists(file_path): os.remove(file_path)
+    if os.path.exists(html_file_path): os.remove(html_file_path)
+
