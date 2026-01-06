@@ -106,26 +106,50 @@ async def aio(url,name):
     return k
 
 
-async def download(url,name):
-    ka = f'{name}.pdf'
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url) as resp:
-            if resp.status == 200:
-                f = await aiofiles.open(ka, mode='wb')
-                await f.write(await resp.read())
-                await f.close()
-    return ka
+async def download_video(url, cmd, name):
+    retry_count = 0
+    max_retries = 2
 
-async def pdf_download(url, file_name, chunk_size=1024 * 10):
-    if os.path.exists(file_name):
-        os.remove(file_name)
-    r = requests.get(url, allow_redirects=True, stream=True)
-    with open(file_name, 'wb') as fd:
-        for chunk in r.iter_content(chunk_size=chunk_size):
-            if chunk:
-                fd.write(chunk)
-    return file_name   
-   
+    # --- ADDED: ClassX/SuperClimax Headers Logic ---
+    headers_arg = ""
+    if "classx.co.in" in url or "superclimaxacademy" in url:
+        # In links ke liye Referer aur User-Agent compulsory hai
+        headers_arg = (
+            '--add-header "Referer:https://superclimaxacademy.com/" '
+            '--add-header "User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"'
+        )
+
+    while retry_count < max_retries:
+        # Command mein headers ko integrate kar rahe hain
+        download_cmd = f'{cmd} {headers_arg} -R 25 --fragment-retries 25 --external-downloader aria2c --downloader-args "aria2c: -x 16 -j 32"'
+        
+        print(f"Running Download Command: {download_cmd}")
+        logging.info(download_cmd)
+
+        k = subprocess.run(download_cmd, shell=True)
+
+        if k.returncode == 0:
+            break  # Success
+
+        retry_count += 1
+        print(f"⚠️ Download failed (attempt {retry_count}/{max_retries}), retrying in 5s...")
+        await asyncio.sleep(5)
+
+    try:
+        # File checking logic (same as before)
+        if os.path.isfile(name):
+            return name
+        elif os.path.isfile(f"{name}.webm"):
+            return f"{name}.webm"
+        name = name.split(".")[0]
+        if os.path.isfile(f"{name}.mkv"):
+            return f"{name}.mkv"
+        elif os.path.isfile(f"{name}.mp4"):
+            return f"{name}.mp4"
+        return name + ".mp4"
+    except Exception as exc:
+        logging.error(f"Error checking file: {exc}")
+        return name 
 
 def parse_vid_info(info):
     info = info.strip()
